@@ -10,7 +10,7 @@ class MailgunEvent extends Event
     public function verify(Request $request)
     {
         //get needed data
-        $apiKey = env('MAILGUN_SECRET', null);
+        $apiKey = config('email_log.mailgun.secret', null);
         $token = $request->signature['token'];
         $timestamp = $request->signature['timestamp'];
         $signature = $request->signature['signature'];
