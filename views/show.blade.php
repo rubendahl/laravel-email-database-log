@@ -20,14 +20,18 @@
                     <ul>
                         @foreach($attachmentsArray as $key => $attachment)
                             <li>
+                            @if(config('email_log.save_attachments') == 'folder')
                                 @if(Illuminate\Support\Facades\Storage::exists($attachment))
                                     <a href="{{ route('email-log.fetch-attachment', [
                                         'id' => $email->id,
-                                        'attachment' => $key,
+                                        'attachment' => $attachment,
                                     ]) }}">{{ basename($attachment) }}</a>
                                 @else
                                     <a href="#!" style="cursor: not-allowed;">{{ basename($attachment) }} - File Not Found</a>
                                 @endif
+                            @else
+                                <span>{{ basename($attachment) }}</span>
+                            @endif
                             </li>
                         @endforeach
                     </ul>
