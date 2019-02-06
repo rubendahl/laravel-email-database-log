@@ -27,6 +27,7 @@ class EmailLogEvent extends Model
      */
     protected $fillable = [
         'messageId', 'event', 'data',
+        'timestamp_at', 'timestamp_secs',
     ];
 
     /**
@@ -36,6 +37,7 @@ class EmailLogEvent extends Model
      */
     protected $dates = [
         'created_at', 'updated_at',
+        'timestamp_at',
     ];
 
     /**
