@@ -8,6 +8,7 @@ return [
     'routes_prefix_api' => env('EMAIL_LOG_ROUTES_PREFIX_API',''),
     'routes_webhook_prefix' => env('EMAIL_LOG_ROUTES_WEBHOOK_PREFIX', env('EMAIL_LOG_ROUTES_PREFIX','')),
     'save_attachments' => env('EMAIL_LOG_SAVE_ATTACHMENT','folder'),
+    'store_user_id' => env('EMAIL_LOG_STORE_USER_ID',false),
     'mailgun' => [
         'secret' => env('MAILGUN_SECRET', null),
         'filter_unknown_emails' => env('EMAIL_LOG_MAILGUN_FILTER_UNKNOWN_EMAILS', true),
