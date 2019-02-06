@@ -33,6 +33,12 @@ class EmailLogger
             }
         }
 
+        $user_id = null;
+        if (config('email_log.store_user_id')) {
+            $user = \Auth::user();
+            $user_id = $user ? $user->id : null;
+        }
+
         $emailLog = EmailLog::create([
             'date' => date('Y-m-d H:i:s'),
             'from' => $this->formatAddressField($message, 'From'),
@@ -47,6 +53,7 @@ class EmailLogger
             'attachments' => empty($attachments) ? null : implode(', ', $attachments),
             'messageId' => $messageId,
             'mail_driver' => config('mail.driver'),
+            'user_id' => $user_id ?? null,
         ]);
 
         event(new EmailLogged($emailLog));
