@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class AddUserIdToEmailLogEvents extends Migration
+class AddEventTimestampToEmailLogEvents extends Migration
 {
     /**
      * Run the migrations.
