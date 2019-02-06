@@ -26,15 +26,17 @@ class MailgunEvent extends Event
     public function saveEvent(Request $request)
     {
         //get email
-        $email = $this->getEmail(strtok($request->{'event-data'}['message']['headers']['message-id'], '@'));
-        if(!$email)
+        $mail_id_str = strtok($request->{'event-data'}['message']['headers']['message-id'], '@')
+        $email = $this->getEmail($mail_id_str);
+        if(!$email && config('email_log.email.filter_unknown_emails')) {
             return response('Error: no E-mail found', 400)->header('Content-Type', 'text/plain');
+        }
 
         $event_data = $request->{'event-data'};
 
         //save event
         EmailLogEvent::create([
-            'messageId' => $email->id,
+            'messageId' => $email ? $email->id : $mail_id_str,
             'event' => $event_data['event'],
             'timestamp_secs' => $event_data['timestamp'],
             'timestamp_at'   => $event_data['timestamp'],
