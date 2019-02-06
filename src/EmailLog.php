@@ -39,6 +39,7 @@ class EmailLog extends Model
         'attachments',
         'messageId',
         'mail_driver',
+        'user_id',
     ];
 
     /**
