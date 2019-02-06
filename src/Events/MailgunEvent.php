@@ -30,10 +30,14 @@ class MailgunEvent extends Event
         if(!$email)
             return response('Error: no E-mail found', 400)->header('Content-Type', 'text/plain');
 
+        $event_data = $request->{'event-data'};
+
         //save event
         EmailLogEvent::create([
             'messageId' => $email->id,
-            'event' => $request->{'event-data'}['event'],
+            'event' => $event_data['event'],
+            'timestamp_secs' => $event_data['timestamp'],
+            'timestamp_at'   => $event_data['timestamp'],
             'data' => json_encode($request->all()),
         ]);
 
