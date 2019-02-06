@@ -23,7 +23,7 @@ class EmailLogger
         foreach ($message->getChildren() as $child) {
             //docs for this below: http://phpdox.de/demo/Symfony2/classes/Swift_Mime_SimpleMimeEntity/getChildren.xhtml
             if(in_array(get_class($child),['Swift_EmbeddedFile','Swift_Attachment'])) {
-                if (config('email_log.folder') == 'save_attachments') {
+                if (config('email_log.save_attachments') == 'folder') {
                     $attachmentPath = config('email_log.folder') . '/' . $messageId . '/' . $child->getFilename();
                     Storage::put($attachmentPath, $child->getBody());
                     $attachments[] = $attachmentPath;
@@ -37,6 +37,7 @@ class EmailLogger
         if (config('email_log.store_user_id')) {
             $user = \Auth::user();
             $user_id = $user ? $user->id : null;
+            // throw new \Exception("UH OH");
         }
 
         $emailLog = EmailLog::create([
