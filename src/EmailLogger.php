@@ -15,6 +15,21 @@ class EmailLogger
      */
     public function handle(MessageSending $event)
     {
+        try {
+            $this->logMessageSendingEvent($event);
+        } catch (\Exception $e) {
+            \Log::error("Email logging failed!");
+            \Log::error($e);
+        }
+    }
+
+    /**
+     * Log mail sending event to database.
+     *
+     * @param MessageSending $event
+     */
+    function logMessageSendingEvent(MessageSending $event)
+    {
         $message = $event->message;
 
         $messageId = strtok($message->getId(), '@');
@@ -35,9 +50,9 @@ class EmailLogger
 
         $user_id = null;
         if (config('email_log.store_user_id')) {
+            // TODO: This will not work for queued mails.
             $user = \Auth::user();
             $user_id = $user ? $user->id : null;
-            // throw new \Exception("UH OH");
         }
 
         $emailLog = EmailLog::create([
