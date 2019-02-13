@@ -36,7 +36,7 @@ class MailgunEvent extends Event
 
         //save event
         EmailLogEvent::create([
-            'messageId' => $email ? $email->id : $mail_id_str,
+            'messageId' => $mail_id_str,
             'event' => $event_data['event'],
             'timestamp_secs' => $event_data['timestamp'],
             'timestamp_at'   => $event_data['timestamp'],
