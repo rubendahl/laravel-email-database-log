@@ -47,6 +47,6 @@ class EmailLogEvent extends Model
      */
     public function email()
     {
-        return $this->belongsTo('Dmcbrn\LaravelEmailDatabaseLog\EmailLog','messageId','id');
+        return $this->belongsTo('Dmcbrn\LaravelEmailDatabaseLog\EmailLog','messageId','messageId');
     }
 }
