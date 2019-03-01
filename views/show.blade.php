@@ -42,6 +42,13 @@
             <li>Headers: {{ $email->headers }}</li>
             <li>Message ID: {{ $email->messageId }}</li>
             <li>Mail Driver: {{ $email->mail_driver }}</li>
+            <li>Events:
+                <ul>
+                    @foreach($email->events as $event)
+                        <li><strong>{{ $event->event }}</strong> {{ $event->created_at }}</li>
+                    @endforeach
+                </ul>
+            </li>
         </ul>
 
         <a href="{{ route('email-log') }}">Back to All</a>
