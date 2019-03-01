@@ -16,7 +16,7 @@ class EmailLogController extends Controller {
                     $q->select('messageId','created_at','event');
                 }
             ])
-            ->select('id','date','from','to','subject')
+            ->select('id','date','from','to','subject','messageId')
             ->orderBy('id','desc')
             ->paginate(20);
 
