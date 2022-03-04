@@ -4,6 +4,7 @@ namespace Dmcbrn\LaravelEmailDatabaseLog;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Mail\Events\MessageSent;
 
 class LaravelEmailDatabaseLogServiceProvider extends ServiceProvider
 {
@@ -12,7 +13,7 @@ class LaravelEmailDatabaseLogServiceProvider extends ServiceProvider
     {
 //        $this->app->make('Dmcbrn\LaravelEmailDatabaseLog\EmailLogController');
 
-        $this->app['events']->listen(MessageSending::class, EmailLogger::class);
+        $this->app['events']->listen(MessageSent::class, EmailLogger::class);
 
         $this->loadViewsFrom(__DIR__ . '/../views','email-logger');
 
