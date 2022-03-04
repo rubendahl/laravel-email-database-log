@@ -31,8 +31,9 @@ class EmailLogger
     function logMessageSendingEvent(MessageSending $event)
     {
         $message = $event->message;
+        $headers = $message->getHeaders();
 
-        $messageId = strtok($message->getId(), '@');
+        $messageId = strtok($headers->getHeaderBody('message-id')->getId(), '@');
 
         $attachments = [];
         foreach ($message->getChildren() as $child) {
