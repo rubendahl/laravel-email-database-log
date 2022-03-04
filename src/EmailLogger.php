@@ -3,6 +3,9 @@
 namespace Dmcbrn\LaravelEmailDatabaseLog;
 
 use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Mail\Events\MessageSent;
+use Illuminate\Mail\SentMessage;
+
 use Illuminate\Support\Facades\Storage;
 use Dmcbrn\LaravelEmailDatabaseLog\LaravelEvents\EmailLogged;
 
@@ -11,12 +14,12 @@ class EmailLogger
     /**
      * Handle the event.
      *
-     * @param MessageSending $event
+     * @param MessageSent $event
      */
-    public function handle(MessageSending $event)
+    public function handle(MessageSent $event)
     {
         try {
-            $this->logMessageSendingEvent($event);
+            $this->logMessageSentEvent($event);
         } catch (\Exception $e) {
             \Log::error("Email logging failed!");
             \Log::error($e);
@@ -26,18 +29,19 @@ class EmailLogger
     /**
      * Log mail sending event to database.
      *
-     * @param MessageSending $event
+     * @param MessageSent $event
      */
-    function logMessageSendingEvent(MessageSending $event)
+    function logMessageSentEvent(MessageSent $event)
     {
-        $message = $event->message;
+        $sent = $event->sent;
+        $message = $sent->getOriginalMessage();
         $headers = $message->getHeaders();
 
-        $messageId = strtok($headers->getHeaderBody('message-id')->getId(), '@');
+        $messageId = strtok($sent->getMessageId(), '@');
 
         $attachments = [];
-        foreach ($message->getChildren() as $child) {
-            //docs for this below: http://phpdox.de/demo/Symfony2/classes/Swift_Mime_SimpleMimeEntity/getChildren.xhtml
+        foreach ($message->getAttachments() as $child) {
+            //FIXME: docs for this below: http://phpdox.de/demo/Symfony2/classes/Swift_Mime_SimpleMimeEntity/getChildren.xhtml
             if(in_array(get_class($child),['Swift_EmbeddedFile','Swift_Attachment'])) {
                 if (config('email_log.save_attachments') == 'folder') {
                     $attachmentPath = config('email_log.folder') . '/' . $messageId . '/' . $child->getFilename();
@@ -65,8 +69,8 @@ class EmailLogger
             'bcc' => $this->formatAddressField($message, 'Bcc'),
             'reply_to' => $this->formatAddressField($message, 'Reply-To'),
             'subject' => $message->getSubject(),
-            'body' => $message->getBody(),
-            'headers' => (string)$message->getHeaders(),
+            'body' => $message->getBody()->bodyToString(),
+            'headers' => $headers->toString(),
             'attachments' => empty($attachments) ? null : implode(', ', $attachments),
             'messageId' => $messageId,
             'mail_driver' => config('mail.driver'),
@@ -91,10 +95,13 @@ class EmailLogger
             return null;
         }
 
-        $mailboxes = $headers->get($field)->getFieldBodyModel();
+        $mailboxes = $headers->get($field);
 
         $strings = [];
-        foreach ($mailboxes as $email => $name) {
+        foreach ($mailboxes as $mb) {
+            $address = $mb->getAddress();
+            $name  = $address->getName();
+            $email = $address->getAddress();
             $mailboxStr = $email;
             if (null !== $name) {
                 $mailboxStr = $name . ' <' . $mailboxStr . '>';
