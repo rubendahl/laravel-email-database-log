@@ -97,17 +97,7 @@ class EmailLogger
 
         $mailboxes = $headers->get($field);
 
-        $strings = [];
-        foreach ($mailboxes as $mb) {
-            $address = $mb->getAddress();
-            $name  = $address->getName();
-            $email = $address->getAddress();
-            $mailboxStr = $email;
-            if (null !== $name) {
-                $mailboxStr = $name . ' <' . $mailboxStr . '>';
-            }
-            $strings[] = $mailboxStr;
-        }
+        $strings = $mailboxes->getAddressStrings();
         return implode(', ', $strings);
     }
 }
