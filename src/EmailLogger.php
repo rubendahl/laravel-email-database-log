@@ -42,13 +42,14 @@ class EmailLogger
         $attachments = [];
         foreach ($message->getAttachments() as $child) {
             //FIXME: docs for this below: http://phpdox.de/demo/Symfony2/classes/Swift_Mime_SimpleMimeEntity/getChildren.xhtml
-            if(in_array(get_class($child),['Swift_EmbeddedFile','Swift_Attachment'])) {
+            if(true) { // WAS:  in_array(get_class($child),['Swift_EmbeddedFile','Swift_Attachment'])) { // TODO: Filter out?
+                $filename = $child->getPreparedHeaders()->getHeaderParameter('Content-Disposition', 'filename');
                 if (config('email_log.save_attachments') == 'folder') {
-                    $attachmentPath = config('email_log.folder') . '/' . $messageId . '/' . $child->getFilename();
-                    Storage::disk(config('email_log.disk'))->put($attachmentPath, $child->getBody());
+                    $attachmentPath = config('email_log.disk') . '/' . $messageId . '/' . $filename;
+                    Storage::disk(config('email_log.disk'))->put($attachmentPath, $child->bodyToString()); // FIXME: Encoded body...
                     $attachments[] = $attachmentPath;
                 } else {
-                    $attachments[] = $child->getFilename();
+                    $attachments[] = $filename;
                 }
             }
         }
