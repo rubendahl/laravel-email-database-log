@@ -37,7 +37,8 @@ class EmailLogger
         $message = $sent->getOriginalMessage();
         $headers = $message->getHeaders();
 
-        $messageId = strtok($sent->getMessageId(), '@');
+        $msgIdStr = $sent->getMessageId();
+        $messageId = trim(strtok($msgIdStr, '@'), '<');
 
         $attachments = [];
         foreach ($message->getAttachments() as $child) {
