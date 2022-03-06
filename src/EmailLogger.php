@@ -69,7 +69,7 @@ class EmailLogger
             'bcc' => $this->formatAddressField($message, 'Bcc'),
             'reply_to' => $this->formatAddressField($message, 'Reply-To'),
             'subject' => $message->getSubject(),
-            'body' => $message->getBody()->bodyToString(),
+            'body' => $message->getHtmlBody(),
             'headers' => $headers->toString(),
             'attachments' => empty($attachments) ? null : implode(', ', $attachments),
             'messageId' => $messageId,
