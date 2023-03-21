@@ -25,6 +25,9 @@
                                 @else
                                     {{ $attachment['name'] }} - {{ $attachment['message'] }}
                                 @endif
+                            @else
+                                <span>{{ basename($attachment) }}</span>
+                            @endif
                             </li>
                         @endforeach
                     </ul>

@@ -28,15 +28,18 @@ class EmailLog extends Model
     protected $fillable = [
         'date',
         'from',
+        'sender',
         'to',
         'cc',
         'bcc',
+        'reply_to',
         'subject',
         'body',
         'headers',
         'attachments',
         'messageId',
         'mail_driver',
+        'user_id',
     ];
 
     /**
