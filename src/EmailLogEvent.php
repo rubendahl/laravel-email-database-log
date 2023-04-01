@@ -31,13 +31,14 @@ class EmailLogEvent extends Model
     ];
 
     /**
-     * The attributes that are dates.
+     * The attributes that are cast to specific types.
      *
      * @var array
      */
-    protected $dates = [
-        'created_at', 'updated_at',
-        'timestamp_at',
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'timestamp_at' => 'datetime',
     ];
 
     /**
